@@ -1,6 +1,16 @@
 # find_your_idea
 
-Browse the endless stream of the internets ideas
+Browse the endless stream of the internets ideas.
+
+https://www.reddit.com/r/AppIdeas/
+
+https://www.reddit.com/r/Startup_Ideas/
+
+https://www.reddit.com/r/Lightbulb/
+
+https://www.reddit.com/r/CrazyIdeas/
+
+https://www.instructables.com/
 
 ## Getting Started
 
