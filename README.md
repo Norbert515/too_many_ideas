@@ -12,6 +12,8 @@ https://www.reddit.com/r/CrazyIdeas/
 
 https://www.instructables.com/
 
+https://www.ideaswatch.com/browse?p=2
+
 ## Getting Started
 
 For help getting started with Flutter, view our online
