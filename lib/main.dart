@@ -1,7 +1,9 @@
+import 'package:find_your_idea/filter_input.dart';
 import 'package:find_your_idea/list_item.dart';
 import 'package:find_your_idea/model/post.dart';
 import 'package:find_your_idea/repository.dart';
 import 'package:flutter/material.dart';
+import 'package:meta/meta.dart';
 
 void main() => runApp(new MyApp());
 
@@ -33,15 +35,29 @@ class _MyHomePageState extends State<MyHomePage> {
 
   FocusNode focusNode;
 
+  ScrollController controller = new ScrollController();
+
+  final double loadMoreThreshold = 200.0;
+
 
   @override
   void initState() {
     super.initState();
-    new RedditDataSource().getRecentPostsFrom("ProgrammerHumor").then((items)=> setState((){this.items = items;}));
+    new RedditDataSource().getRecentPostsFrom("CrazyIdeas").then((items)=> setState((){this.items = items;}));
     focusNode = new FocusNode();
+
+
+    controller.addListener(() {
+      if(controller.offset > controller.position.maxScrollExtent - loadMoreThreshold) {
+        _loadMore();
+      }
+    });
   }
 
 
+  void _loadMore() {
+
+  }
   @override
   void dispose() {
     focusNode.dispose();
@@ -61,33 +77,13 @@ class _MyHomePageState extends State<MyHomePage> {
             child: new FilterInput(),
           ),
           new SliverList(delegate: new SliverChildBuilderDelegate((BuildContext context, int index) {
-            return new ListItem(text: items[index].title,);
+            return new ListItem(title: items[index].title, subtitle: items[index].selftext,);
           }, childCount: items.length))
         ],
+        controller: controller,
       ),
     );
   }
 }
 
 
-class FilterInput extends StatefulWidget {
-  @override
-  _FilterInputState createState() => new _FilterInputState();
-}
-
-class _FilterInputState extends State<FilterInput> {
-  @override
-  Widget build(BuildContext context) {
-    return new Card(
-      child: new Wrap(
-        children: <Widget>[
-          new SizedBox(
-            child: new TextField(),
-            width: 100.0,
-          ),
-          new Chip(label: new Text("hi"), onDeleted: (){}, ),
-        ],
-      ),
-    );
-  }
-}
