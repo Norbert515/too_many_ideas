@@ -5,6 +5,7 @@ import 'package:find_your_idea/list_item.dart';
 import 'package:find_your_idea/model/post.dart';
 import 'package:find_your_idea/repository.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:meta/meta.dart';
 
 void main() => runApp(new MyApp());
@@ -46,6 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<FilterItem> filter = [];
 
+  bool showFastScrollUp = false;
 
   @override
   void initState() {
@@ -58,6 +60,16 @@ class _MyHomePageState extends State<MyHomePage> {
     controller.addListener(() {
       if(controller.offset > controller.position.maxScrollExtent - loadMoreThreshold) {
         _loadMore();
+      }
+
+      if(controller.position.userScrollDirection == ScrollDirection.forward) {
+        setState(() {
+          showFastScrollUp = true;
+        });
+      } else {
+        setState(() {
+          showFastScrollUp = false;
+        });
       }
     });
   }
@@ -83,15 +95,25 @@ class _MyHomePageState extends State<MyHomePage> {
   void dispose() {
     focusNode.dispose();
     repository.dispose();
+    controller.dispose();
     super.dispose();
   }
 
+  
+  
+  void _scrollUp() {
+    controller.animateTo(0.0, duration: const Duration(milliseconds: 900), curve: Curves.decelerate);
+    setState(() {
+      showFastScrollUp = false;
+    });
+  }
 
   void _onFilterSettingsChanged(List<FilterItem> items) {
     setState(() {
       filter = items;
     });
   }
+  
 
   bool _shouldKeepItem(RedditPost post) {
     if(filter.isEmpty) return true;
@@ -121,45 +143,86 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: new AppBar(
         title: new Text(widget.title),
       ),
-      body: new CustomScrollView(
-        slivers: <Widget>[
-          //TODO maybe sliver app bar? No but overscroll!!
-          new SliverToBoxAdapter(
-            child: new FilterInput(
-              onFilterSettingsChanged: _onFilterSettingsChanged,
+      body: new FastScrollTop(
+        visible: showFastScrollUp,
+        onClick: _scrollUp,
+        child: new CustomScrollView(
+          slivers: <Widget>[
+            //TODO maybe sliver app bar? No but overscroll!!
+            new SliverToBoxAdapter(
+              child: new FilterInput(
+                onFilterSettingsChanged: _onFilterSettingsChanged,
+              ),
             ),
-          ),
-          new StreamBuilder<List<RedditPost>>(
-            stream: repository.getPostStream(),
-          //  stream: repository.getPostStream().map(_filter2),
-            builder: (BuildContext context, AsyncSnapshot<List<RedditPost>> snapshot) {
-              List<RedditPost> items = _filter2(snapshot.data ?? const []);
-              return new SliverList(delegate: new SliverChildBuilderDelegate((BuildContext context, int index) {
+            new StreamBuilder<List<RedditPost>>(
+              stream: repository.getPostStream(),
+            //  stream: repository.getPostStream().map(_filter2),
+              builder: (BuildContext context, AsyncSnapshot<List<RedditPost>> snapshot) {
+                List<RedditPost> items = _filter2(snapshot.data ?? const []);
+                return new SliverList(delegate: new SliverChildBuilderDelegate((BuildContext context, int index) {
 
-                return new InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) {
-                      return new ListItemPage(
-                        title: items[index].title,
-                        subtitle: items[index].selftext,
-                        source: items[index].permalink,
-                      );
-                    }));
-                  },
-                    child: new ListItem(title: items[index].title, subtitle: items[index].selftext,)
-                );
+                  return new InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) {
+                        return new ListItemPage(
+                          title: items[index].title,
+                          subtitle: items[index].selftext,
+                          source: items[index].permalink,
+                        );
+                      }));
+                    },
+                      child: new ListItem(title: items[index].title, subtitle: items[index].selftext,)
+                  );
 
-              }, childCount: items != null ? items.length : 0));
-            },
-          ),
-          new SliverToBoxAdapter(
-            child: isLoading? new Center(child: new CircularProgressIndicator()) :new MaterialButton(child: new Text("load more"), onPressed: _loadMore,),
-          )
-        ],
-        controller: controller,
+                }, childCount: items != null ? items.length : 0));
+              },
+            ),
+            new SliverToBoxAdapter(
+              child: isLoading? new Center(child: new CircularProgressIndicator()) :new MaterialButton(child: new Text("load more"), onPressed: _loadMore,),
+            )
+          ],
+          controller: controller,
+        ),
       ),
     );
   }
 }
 
 
+class FastScrollTop extends StatefulWidget {
+
+  final bool visible;
+
+  final Widget child;
+
+  final VoidCallback onClick;
+
+  const FastScrollTop({Key key, this.visible, this.child, this.onClick}) : super(key: key);
+
+  @override
+  _FastScrollTOpState createState() => new _FastScrollTOpState();
+}
+
+class _FastScrollTOpState extends State<FastScrollTop> {
+  @override
+  Widget build(BuildContext context) {
+    return new Stack(
+      children: <Widget>[
+        widget.child,
+        widget.visible ? new Positioned(
+            top: 10.0,
+            bottom:  null,
+            left: 0.0,
+            right: 0.0,
+            child: new Center(
+              child: new MaterialButton(
+                onPressed: widget.onClick,
+                color: Colors.red,
+                child: new Text("Scroll up"),
+              ),
+            )
+        ): new SizedBox()
+      ],
+    );
+  }
+}

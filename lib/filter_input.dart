@@ -39,10 +39,13 @@ class _FilterInputState extends State<FilterInput> {
     Widget tile = iterator.current;
     while (iterator.moveNext()) {
       yield tile;
-      yield new Baseline(
-        baseline: 30.0,
-        baselineType: TextBaseline.ideographic,
-        child: new Text("OR")
+      yield new Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+        child: new Baseline(
+          baseline: 30.0,
+          baselineType: TextBaseline.ideographic,
+          child: new Text("OR")
+        ),
       );
       tile = iterator.current;
     }
