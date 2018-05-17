@@ -34,7 +34,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
 
-
   FocusNode focusNode;
 
   ScrollController controller = new ScrollController();
@@ -52,6 +51,13 @@ class _MyHomePageState extends State<MyHomePage> {
   int allItemsCount = 0;
   int filteredItemsCount = 0;
 
+
+  double bufferPosition = 0.0;
+  bool scrollsUp = false;
+
+  double showFastScrollThreshold = 200.0;
+
+  double firstActivateThreshold = 1000.0;
   @override
   void initState() {
     super.initState();
@@ -65,11 +71,20 @@ class _MyHomePageState extends State<MyHomePage> {
         _loadMore();
       }
 
-      if(controller.position.userScrollDirection == ScrollDirection.forward) {
-        setState(() {
-          showFastScrollUp = true;
-        });
+      if(controller.position.userScrollDirection == ScrollDirection.forward && controller.offset > firstActivateThreshold) {
+        //When switching from scrolling down to scrolling up
+        if(!scrollsUp) {
+          bufferPosition = controller.offset;
+        }
+        if(bufferPosition - controller.offset > showFastScrollThreshold) {
+          setState(() {
+            showFastScrollUp = true;
+          });
+        }
+        scrollsUp = true;
+
       } else {
+        scrollsUp = false;
         setState(() {
           showFastScrollUp = false;
         });

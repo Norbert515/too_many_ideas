@@ -13,11 +13,20 @@ class ListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextStyle titleTextStyle = new TextStyle(
+      fontSize: 15.0,
+
+    );
+
     return new Card(
-      child: new ListTile(
+      child: new Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: new Text(title, style: titleTextStyle,),
+      ),
+ /*     child: new ListTile(
         title: new Text(title),
         subtitle: new Text(subtitle, overflow: TextOverflow.ellipsis, maxLines: 2,),
-      ),
+      ),*/
     );
    /* return new ListTile(
       title: new Text(title),
