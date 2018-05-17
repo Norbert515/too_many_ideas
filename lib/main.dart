@@ -49,6 +49,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   bool showFastScrollUp = false;
 
+  int allItemsCount = 0;
+  int filteredItemsCount = 0;
+
   @override
   void initState() {
     super.initState();
@@ -142,6 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(widget.title),
+        leading: new Text("$allItemsCount/$filteredItemsCount"),
       ),
       body: new FastScrollTop(
         visible: showFastScrollUp,
@@ -156,11 +160,14 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             new StreamBuilder<List<RedditPost>>(
               stream: repository.getPostStream(),
-            //  stream: repository.getPostStream().map(_filter2),
               builder: (BuildContext context, AsyncSnapshot<List<RedditPost>> snapshot) {
+                allItemsCount = snapshot.data?.length ?? 0;
                 List<RedditPost> items = _filter2(snapshot.data ?? const []);
+                filteredItemsCount = items.length;
+                WidgetsBinding.instance.addPostFrameCallback((_){
+                  setState((){});
+                });
                 return new SliverList(delegate: new SliverChildBuilderDelegate((BuildContext context, int index) {
-
                   return new InkWell(
                     onTap: () {
                       Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:share/share.dart';
 
 class ListItem extends StatelessWidget {
 
@@ -55,12 +56,16 @@ class ListItemPage extends StatelessWidget {
           new MarkdownBody(data: subtitle, onTapLink: _onLinkTapped,),
           new Divider(),
           new MarkdownBody(data: "[source](https://www.reddit.com$source)", onTapLink: _onLinkTapped,),
-          new MaterialButton(child: new Text("Share Idea"), onPressed: (){}, color: Colors.blue,)
+          new MaterialButton(child: new Text("Share Idea"), onPressed: _share, color: Colors.blue,)
         ],
       ),
     );
   }
 
+
+  void _share() {
+    share(source);
+  }
 
   void _onLinkTapped(String url) async{
     if (await canLaunch(url)) {

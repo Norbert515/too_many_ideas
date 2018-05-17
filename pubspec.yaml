@@ -12,6 +12,7 @@ dependencies:
   cupertino_icons: ^0.1.0
   flutter_markdown: "^0.1.5"
   url_launcher: "^3.0.1"
+  share: "^0.4.0"
 
 
 
