@@ -142,55 +142,51 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(widget.title),
-        leading: new Text("$allItemsCount/$filteredItemsCount"),
-      ),
-      body: new FastScrollTop(
-        visible: showFastScrollUp,
-        onClick: _scrollUp,
-        child: new CustomScrollView(
-          slivers: <Widget>[
-            //TODO maybe sliver app bar? No but overscroll!!
-            new SliverToBoxAdapter(
-              child: new FilterInput(
-                onFilterSettingsChanged: _onFilterSettingsChanged,
-              ),
-            ),
-            new StreamBuilder<List<RedditPost>>(
-              stream: repository.getPostStream(),
-              builder: (BuildContext context, AsyncSnapshot<List<RedditPost>> snapshot) {
-                allItemsCount = snapshot.data?.length ?? 0;
-                List<RedditPost> items = _filter2(snapshot.data ?? const []);
-                filteredItemsCount = items.length;
-                WidgetsBinding.instance.addPostFrameCallback((_){
-                  setState((){});
-                });
-                return new SliverList(delegate: new SliverChildBuilderDelegate((BuildContext context, int index) {
+    return new StreamBuilder<List<RedditPost>>(
+      stream: repository.getPostStream(),
+      builder: (BuildContext context, AsyncSnapshot<List<RedditPost>> snapshot) {
+        allItemsCount = snapshot.data?.length ?? 0;
+        List<RedditPost> items = _filter2(snapshot.data ?? const []);
+        filteredItemsCount = items.length;
+        return new Scaffold(
+          appBar: new AppBar(
+            title: new Text(widget.title),
+            leading: new Text("$allItemsCount/$filteredItemsCount"),
+          ),
+          body: new FastScrollTop(
+            visible: showFastScrollUp,
+            onClick: _scrollUp,
+            child: new CustomScrollView(
+              slivers: <Widget>[
+                new SliverToBoxAdapter(
+                  child: new FilterInput(
+                    onFilterSettingsChanged: _onFilterSettingsChanged,
+                  ),
+                ),
+                new SliverList(delegate: new SliverChildBuilderDelegate((BuildContext context, int index) {
                   return new InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) {
-                        return new ListItemPage(
-                          title: items[index].title,
-                          subtitle: items[index].selftext,
-                          source: items[index].permalink,
-                        );
-                      }));
-                    },
+                      onTap: () {
+                        Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) {
+                          return new ListItemPage(
+                            title: items[index].title,
+                            subtitle: items[index].selftext,
+                            source: items[index].permalink,
+                          );
+                        }));
+                      },
                       child: new ListItem(title: items[index].title, subtitle: items[index].selftext,)
                   );
 
-                }, childCount: items != null ? items.length : 0));
-              },
+                }, childCount: items != null ? items.length : 0)),
+                new SliverToBoxAdapter(
+                  child: isLoading? new Center(child: new CircularProgressIndicator()) :new MaterialButton(child: new Text("load more"), onPressed: _loadMore,),
+                )
+              ],
+              controller: controller,
             ),
-            new SliverToBoxAdapter(
-              child: isLoading? new Center(child: new CircularProgressIndicator()) :new MaterialButton(child: new Text("load more"), onPressed: _loadMore,),
-            )
-          ],
-          controller: controller,
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
