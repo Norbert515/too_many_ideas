@@ -1,12 +1,9 @@
-import 'dart:async';
-
 import 'package:find_your_idea/filter_input.dart';
 import 'package:find_your_idea/list_item.dart';
 import 'package:find_your_idea/model/post.dart';
 import 'package:find_your_idea/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:meta/meta.dart';
 
 void main() => runApp(new MyApp());
 
@@ -16,7 +13,7 @@ class MyApp extends StatelessWidget {
     return new MaterialApp(
       title: 'Flutter Demo',
       theme: new ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.yellow,
       ),
       home: new MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -168,36 +165,36 @@ class _MyHomePageState extends State<MyHomePage> {
             title: new Text(widget.title),
             leading: new Text("$allItemsCount/$filteredItemsCount"),
           ),
-          body: new FastScrollTop(
-            visible: showFastScrollUp,
-            onClick: _scrollUp,
-            child: new CustomScrollView(
-              slivers: <Widget>[
-                new SliverToBoxAdapter(
-                  child: new FilterInput(
-                    onFilterSettingsChanged: _onFilterSettingsChanged,
+          body: new Container(
+            color: const Color(0xffF0F0F0),
+            child: new FastScrollTop(
+              visible: showFastScrollUp,
+              onClick: _scrollUp,
+              child: new CustomScrollView(
+                slivers: <Widget>[
+                  new SliverToBoxAdapter(
+                    child: new FilterInput(
+                      onFilterSettingsChanged: _onFilterSettingsChanged,
+                    ),
                   ),
-                ),
-                new SliverList(delegate: new SliverChildBuilderDelegate((BuildContext context, int index) {
-                  return new InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) {
-                          return new ListItemPage(
-                            title: items[index].title,
-                            subtitle: items[index].selftext,
-                            source: items[index].permalink,
-                          );
-                        }));
-                      },
-                      child: new ListItem(title: items[index].title, subtitle: items[index].selftext,)
-                  );
+                  new SliverList(delegate: new SliverChildBuilderDelegate((BuildContext context, int index) {
+                    return new ListItem(title: items[index].title, subtitle: items[index].selftext, onTap: () {
+                      Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) {
+                        return new ListItemPage(
+                          title: items[index].title,
+                          subtitle: items[index].selftext,
+                          source: items[index].permalink,
+                        );
+                      }));
+                    },);
 
-                }, childCount: items != null ? items.length : 0)),
-                new SliverToBoxAdapter(
-                  child: isLoading? new Center(child: new CircularProgressIndicator()) :new MaterialButton(child: new Text("load more"), onPressed: _loadMore,),
-                )
-              ],
-              controller: controller,
+                  }, childCount: items != null ? items.length : 0)),
+                  new SliverToBoxAdapter(
+                    child: isLoading? new Center(child: new CircularProgressIndicator()) :new MaterialButton(child: new Text("load more"), onPressed: _loadMore,),
+                  )
+                ],
+                controller: controller,
+              ),
             ),
           ),
         );

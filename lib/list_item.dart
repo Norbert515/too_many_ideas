@@ -9,19 +9,44 @@ class ListItem extends StatelessWidget {
   final String title;
   final String subtitle;
 
-  const ListItem({Key key, this.title, this.subtitle}) : super(key: key);
+  final VoidCallback onTap;
+
+  const ListItem({Key key, this.title, this.subtitle, this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     TextStyle titleTextStyle = new TextStyle(
-      fontSize: 15.0,
+      fontSize: 13.0,
+      fontWeight: FontWeight.bold,
+
+    );
+
+    TextStyle subtitleTextStyle = new TextStyle(
+      fontSize: 10.0,
+      fontWeight: FontWeight.w300
 
     );
 
     return new Card(
-      child: new Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: new Text(title, style: titleTextStyle,),
+      margin: const EdgeInsets.symmetric(vertical: 4.0),
+      shape: new RoundedRectangleBorder(),
+      elevation: 0.5,
+      child: new InkWell(
+        onTap: onTap,
+        child: new Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: new Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              new Text(title, style: titleTextStyle,),
+              subtitle.isNotEmpty? new Padding(
+                padding: const EdgeInsets.only(top: 4.0),
+                child: new Text(subtitle, style: subtitleTextStyle, overflow: TextOverflow.ellipsis, maxLines: 3,),
+              )
+                  : new SizedBox()
+            ],
+          ),
+        ),
       ),
  /*     child: new ListTile(
         title: new Text(title),
@@ -48,8 +73,17 @@ class ListItemPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    TextStyle titleStyle = const TextStyle(
+
+    TextStyle titleTextStyle = new TextStyle(
       fontSize: 20.0,
+      fontWeight: FontWeight.bold,
+
+    );
+
+    TextStyle subtitleTextStyle = new TextStyle(
+        fontSize: 10.0,
+        fontWeight: FontWeight.w300
+
     );
 
 
@@ -60,12 +94,29 @@ class ListItemPage extends StatelessWidget {
       body: new ListView(
         padding: const EdgeInsets.all(12.0),
         children: <Widget>[
-          new Text(title, style: titleStyle,),
+          new Text(title, style: titleTextStyle,),
           new Divider(),
           new MarkdownBody(data: subtitle, onTapLink: _onLinkTapped,),
           new Divider(),
-          new MarkdownBody(data: "[source](https://www.reddit.com$source)", onTapLink: _onLinkTapped,),
-          new MaterialButton(child: new Text("Share Idea"), onPressed: _share, color: Colors.blue,)
+        //  new MarkdownBody(data: "[source](https://www.reddit.com$source)", onTapLink: _onLinkTapped,),
+          new Row(
+            children: <Widget>[
+              new Expanded(
+                  flex: 1,
+                  child: new Padding(
+                    padding: const EdgeInsets.only(right: 4.0),
+                    child: new MaterialButton(child: new Text("Source"), onPressed: (){
+                      _onLinkTapped("https://www.reddit.com$source");
+                    }, color: Colors.blue,),
+                  )
+              ),
+              new Expanded(
+                  flex: 3,
+                  child: new MaterialButton(child: new Text("Share Idea"), onPressed: _share, color: Colors.blue,)
+              ),
+            ],
+          ),
+        //  new MaterialButton(child: new Text("Share Idea"), onPressed: _share, color: Colors.blue,)
         ],
       ),
     );
