@@ -20,7 +20,7 @@ class Repository {
 
   int redditToLoadFrom = 0;
 
-  Future load() async {
+  Future<Null> load() async {
     List<RedditPost> redditPosts;
 
     switch(redditToLoadFrom) {
@@ -43,6 +43,11 @@ class Repository {
     streamController.add(posts);
   }
 
+
+  void reset() {
+    redditToLoadFrom = 0;
+    posts = [];
+  }
 
 
   void dispose() {

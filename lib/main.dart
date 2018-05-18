@@ -2,6 +2,7 @@ import 'package:find_your_idea/filter_input.dart';
 import 'package:find_your_idea/list_item.dart';
 import 'package:find_your_idea/model/post.dart';
 import 'package:find_your_idea/repository.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -61,6 +62,8 @@ class _MyHomePageState extends State<MyHomePage> {
     focusNode = new FocusNode();
 
     repository.load();
+
+    MaterialPageRoute.debugEnableFadingRoutes = true;
 
 
     controller.addListener(() {
@@ -179,30 +182,37 @@ class _MyHomePageState extends State<MyHomePage> {
             child: new FastScrollTop(
               visible: showFastScrollUp,
               onClick: _scrollUp,
-              child: new CustomScrollView(
-                slivers: <Widget>[
-                  new SliverToBoxAdapter(
-                    child: new FilterInput(
-                      onFilterSettingsChanged: _onFilterSettingsChanged,
+              child: new RefreshIndicator(
+                onRefresh: () async {
+                  repository.reset();
+                  return repository.load();
+                },
+                child: new CustomScrollView(
+                  slivers: <Widget>[
+                    new SliverToBoxAdapter(
+                      child: new FilterInput(
+                        onFilterSettingsChanged: _onFilterSettingsChanged,
+                      ),
                     ),
-                  ),
-                  new SliverList(delegate: new SliverChildBuilderDelegate((BuildContext context, int index) {
-                    return new ListItem(title: items[index].title, subtitle: items[index].selftext, onTap: () {
-                      Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) {
-                        return new ListItemPage(
-                          title: items[index].title,
-                          subtitle: items[index].selftext,
-                          source: items[index].permalink,
-                        );
-                      }));
-                    },);
+                    new SliverList(delegate: new SliverChildBuilderDelegate((BuildContext context, int index) {
+                      return new ListItem(title: items[index].title, subtitle: items[index].selftext, onTap: () {
+                        Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) {
+                          return new ListItemPage(
+                            title: items[index].title,
+                            subtitle: items[index].selftext,
+                            source: items[index].permalink,
+                          );
+                        }), );
+                      });
 
-                  }, childCount: items != null ? items.length : 0)),
-                  new SliverToBoxAdapter(
-                    child: isLoading? new Center(child: new CircularProgressIndicator()) :new MaterialButton(child: new Text("load more"), onPressed: _loadMore,),
-                  )
-                ],
-                controller: controller,
+                    }, childCount: items != null ? items.length : 0)),
+                    new SliverToBoxAdapter(
+                      child: isLoading? new Center(child: new CircularProgressIndicator()) :new MaterialButton(child: new Text("load more"), onPressed: _loadMore,),
+                    )
+                  ],
+                  controller: controller,
+               //   physics: new BouncyBouncingScrollPhysics(),
+                ),
               ),
             ),
           ),
@@ -210,6 +220,7 @@ class _MyHomePageState extends State<MyHomePage> {
       },
     );
   }
+
 }
 
 

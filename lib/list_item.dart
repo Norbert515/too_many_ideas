@@ -16,13 +16,13 @@ class ListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextStyle titleTextStyle = new TextStyle(
-      fontSize: 13.0,
+      fontSize: 18.0,
       fontWeight: FontWeight.bold,
 
     );
 
     TextStyle subtitleTextStyle = new TextStyle(
-      fontSize: 10.0,
+      fontSize: 15.0,
       fontWeight: FontWeight.w300
 
     );
@@ -84,6 +84,9 @@ class ListItemPage extends StatelessWidget {
     );
 
     Color buttonColor = Theme.of(context).accentColor;
+    TextStyle buttonTextStyle = const TextStyle(
+      color: Colors.white
+    );
 
     return new Scaffold(
       appBar: new AppBar(
@@ -95,7 +98,7 @@ class ListItemPage extends StatelessWidget {
           new Text(title, style: titleTextStyle,),
           new Divider(),
           new MarkdownBody(data: subtitle, onTapLink: _onLinkTapped,),
-          new Divider(),
+          subtitle.isNotEmpty? new Divider(): const SizedBox(),
         //  new MarkdownBody(data: "[source](https://www.reddit.com$source)", onTapLink: _onLinkTapped,),
           new Row(
             children: <Widget>[
@@ -103,14 +106,14 @@ class ListItemPage extends StatelessWidget {
                   flex: 1,
                   child: new Padding(
                     padding: const EdgeInsets.only(right: 4.0),
-                    child: new MaterialButton(child: new Text("Source"), onPressed: (){
+                    child: new MaterialButton(child: new Text("Source", style: buttonTextStyle,), onPressed: (){
                       _onLinkTapped("https://www.reddit.com$source");
                     }, color: buttonColor,),
                   )
               ),
               new Expanded(
                   flex: 3,
-                  child: new MaterialButton(child: new Text("Share Idea"), onPressed: _share, color: buttonColor,)
+                  child: new MaterialButton(child: new Text("Share Idea", style: buttonTextStyle,), onPressed: _share, color: buttonColor,)
               ),
             ],
           ),
