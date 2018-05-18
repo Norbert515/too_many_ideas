@@ -72,20 +72,18 @@ class ListItemPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
-    TextStyle titleTextStyle = new TextStyle(
+    TextStyle titleTextStyle = const TextStyle(
       fontSize: 20.0,
       fontWeight: FontWeight.bold,
 
     );
-
-    TextStyle subtitleTextStyle = new TextStyle(
+    TextStyle subtitleTextStyle = const TextStyle(
         fontSize: 10.0,
         fontWeight: FontWeight.w300
 
     );
 
+    Color buttonColor = Theme.of(context).accentColor;
 
     return new Scaffold(
       appBar: new AppBar(
@@ -107,12 +105,12 @@ class ListItemPage extends StatelessWidget {
                     padding: const EdgeInsets.only(right: 4.0),
                     child: new MaterialButton(child: new Text("Source"), onPressed: (){
                       _onLinkTapped("https://www.reddit.com$source");
-                    }, color: Colors.blue,),
+                    }, color: buttonColor,),
                   )
               ),
               new Expanded(
                   flex: 3,
-                  child: new MaterialButton(child: new Text("Share Idea"), onPressed: _share, color: Colors.blue,)
+                  child: new MaterialButton(child: new Text("Share Idea"), onPressed: _share, color: buttonColor,)
               ),
             ],
           ),

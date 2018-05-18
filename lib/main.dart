@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return new MaterialApp(
       title: 'Flutter Demo',
       theme: new ThemeData(
-        primarySwatch: Colors.yellow,
+        primarySwatch: Colors.indigo,
       ),
       home: new MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -163,7 +163,16 @@ class _MyHomePageState extends State<MyHomePage> {
         return new Scaffold(
           appBar: new AppBar(
             title: new Text(widget.title),
-            leading: new Text("$allItemsCount/$filteredItemsCount"),
+            bottom: new PreferredSize(
+                child: new Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 14.0),
+                  child: new Align(
+                      alignment: Alignment.centerLeft,
+                      child: new Text("$allItemsCount/$filteredItemsCount", style: new TextStyle(color: Colors.white),)
+                  ),
+                ),
+                preferredSize: const Size.fromHeight(5.0)
+            )
           ),
           body: new Container(
             color: const Color(0xffF0F0F0),
@@ -219,8 +228,10 @@ class FastScrollTop extends StatefulWidget {
 }
 
 class _FastScrollTOpState extends State<FastScrollTop> {
+
   @override
   Widget build(BuildContext context) {
+    Color color = Theme.of(context).accentColor;
     return new Stack(
       children: <Widget>[
         widget.child,
@@ -232,7 +243,7 @@ class _FastScrollTOpState extends State<FastScrollTop> {
             child: new Center(
               child: new MaterialButton(
                 onPressed: widget.onClick,
-                color: Colors.red,
+                color: color,
                 child: new Text("Scroll up"),
               ),
             )

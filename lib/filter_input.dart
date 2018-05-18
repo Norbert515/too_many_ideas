@@ -5,11 +5,10 @@ import 'package:meta/meta.dart';
 
 class FilterItem {
   final String text;
-  final Color color;
 
 
 
-  FilterItem(this.text, this.color);
+  FilterItem(this.text);
 }
 
 class FilterInput extends StatefulWidget {
@@ -75,7 +74,6 @@ class _FilterInputState extends State<FilterInput> {
             onDelete: () {
               _handleDelete(filterItem);
             },
-            color: filterItem.color,
           )))),
         ),
       ),
@@ -92,31 +90,29 @@ class _FilterInputState extends State<FilterInput> {
   }
   void _handleSubmit(String text) {
     setState(() {
-      filterItems.add(new FilterItem(text, _getNextColor()));
+      filterItems.add(new FilterItem(text));
       textEditingController.text = "";
     });
     widget.onFilterSettingsChanged(filterItems);
   }
 
 
-  Color _getNextColor() {
-    return Colors.lightBlue;
-  }
+
 }
 
 class AlignedChip extends StatelessWidget {
 
   final String text;
   final VoidCallback onDelete;
-  final Color color;
 
   const AlignedChip({Key key,
     @required this.text,
-    @required this.onDelete,
-    @required this.color}) : super(key: key);
+    @required this.onDelete
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Color color = Theme.of(context).accentColor;
     return new Baseline(
         baseline: 20.0,
         baselineType: TextBaseline.ideographic,
