@@ -1,4 +1,5 @@
 import 'package:find_your_idea/filter_input.dart';
+import 'package:find_your_idea/info_page.dart';
 import 'package:find_your_idea/list_item.dart';
 import 'package:find_your_idea/model/post.dart';
 import 'package:find_your_idea/repository.dart';
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: new ThemeData(
         primarySwatch: Colors.indigo,
       ),
-      home: new MyHomePage(title: 'Flutter Demo Home Page'),
+      home: new MyHomePage(title: 'Insert App Name'),
     );
   }
 }
@@ -166,6 +167,11 @@ class _MyHomePageState extends State<MyHomePage> {
         return new Scaffold(
           appBar: new AppBar(
             title: new Text(widget.title),
+            actions: <Widget>[
+              new IconButton(icon: new Icon(Icons.info), onPressed: (){
+                InfoPage.open(context);
+              })
+            ],
             bottom: new PreferredSize(
                 child: new Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 14.0),

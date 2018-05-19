@@ -48,15 +48,7 @@ class ListItem extends StatelessWidget {
           ),
         ),
       ),
- /*     child: new ListTile(
-        title: new Text(title),
-        subtitle: new Text(subtitle, overflow: TextOverflow.ellipsis, maxLines: 2,),
-      ),*/
     );
-   /* return new ListTile(
-      title: new Text(title),
-      subtitle: new Text(subtitle),
-    );*/
   }
 }
 
@@ -117,7 +109,6 @@ class ListItemPage extends StatelessWidget {
               ),
             ],
           ),
-        //  new MaterialButton(child: new Text("Share Idea"), onPressed: _share, color: Colors.blue,)
         ],
       ),
     );
