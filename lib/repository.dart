@@ -18,7 +18,7 @@ class Repository {
   StreamController<List<RedditPost>> streamController = new StreamController();
 
 
-  int redditToLoadFrom = 0;
+  int redditToLoadFrom = 1;
 
   Future<Null> load() async {
     List<RedditPost> redditPosts;

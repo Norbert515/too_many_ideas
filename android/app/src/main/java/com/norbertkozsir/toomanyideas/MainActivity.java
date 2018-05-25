@@ -1,4 +1,4 @@
-package com.norbertkozsir.findyouridea;
+package com.norbertkozsir.toomanyideas;
 
 import android.os.Bundle;
 

@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.norbertkozsir.findyouridea">
+    package="com.norbertkozsir.toomanyideas">
 
     <!-- The INTERNET permission is required for development. Specifically,
          flutter needs it to communicate with the running application
@@ -14,7 +14,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="find_your_idea"
+        android:label="Too many ideas"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

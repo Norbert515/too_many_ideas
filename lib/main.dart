@@ -9,16 +9,40 @@ import 'package:flutter/rendering.dart';
 
 void main() => runApp(new MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => new _MyAppState();
+
+}
+
+class _MyAppState extends State<MyApp> {
+
+  Brightness brightness = Brightness.light;
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: new ThemeData(
         primarySwatch: Colors.indigo,
+        accentColor: Colors.indigo[500],
+        brightness: brightness,
       ),
-      home: new MyHomePage(title: 'Insert App Name'),
+      home: new MyHomePage(title: 'Too many ideas'),
+      routes: {
+        "info" : (_) => new InfoPage(
+          onThemeChanged: _handleThemeChanged,
+        ),
+      },
     );
+  }
+
+
+  void _handleThemeChanged(Brightness brightness) {
+    setState(() {
+      this.brightness = brightness;
+    });
   }
 }
 
@@ -169,7 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
             title: new Text(widget.title),
             actions: <Widget>[
               new IconButton(icon: new Icon(Icons.info), onPressed: (){
-                InfoPage.open(context);
+                Navigator.of(context).pushNamed("info");
               })
             ],
             bottom: new PreferredSize(
@@ -184,7 +208,6 @@ class _MyHomePageState extends State<MyHomePage> {
             )
           ),
           body: new Container(
-            color: const Color(0xffF0F0F0),
             child: new FastScrollTop(
               visible: showFastScrollUp,
               onClick: _scrollUp,
@@ -210,7 +233,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           );
                         }), );
                       });
-
                     }, childCount: items != null ? items.length : 0)),
                     new SliverToBoxAdapter(
                       child: isLoading? new Center(child: new CircularProgressIndicator()) :new MaterialButton(child: new Text("load more"), onPressed: _loadMore,),
