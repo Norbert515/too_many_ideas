@@ -2,6 +2,9 @@
 
 Browse the endless stream of the internets ideas.
 
+Check it out on Google Play!
+https://play.google.com/store/apps/details?id=com.norbertkozsir.toomanyideas
+
 https://www.reddit.com/r/AppIdeas/
 
 https://www.reddit.com/r/Startup_Ideas/
