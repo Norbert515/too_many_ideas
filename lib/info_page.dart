@@ -69,7 +69,7 @@ class InfoPage extends StatelessWidget {
 
 
   void _openAppPage() {
-    //TODO implement
+    _open("https://play.google.com/store/apps/details?id=com.norbertkozsir.toomanyideas");
   }
 
   void _open8Icons() {
