@@ -1,4 +1,4 @@
-# find_your_idea
+# too_many_ideas
 
 Browse the endless stream of the internets ideas.
 
